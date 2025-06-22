@@ -4,28 +4,28 @@ export const PIPELINE_CONFIG: PipelineConfig = {
   steps: [
     {
       name: 'Débruitage',
-      description: 'SupervisedDenoisingUNet',
+      description: '',
       color: 'from-blue-500 to-cyan-500',
       icon: 'Sparkles',
       duration: 1500,
     },
     {
       name: 'Contraste',
-      description: 'FCEnet', 
+      description: '', 
       color: 'from-purple-500 to-pink-500',
       icon: 'Zap',
       duration: 1200,
     },
     {
       name: 'Super-Résolution',
-      description: 'FastRealESRGAN',
+      description: '',
       color: 'from-green-500 to-emerald-500',
       icon: 'Eye',
       duration: 2000,
     },
     {
       name: 'Segmentation',
-      description: 'LadderNet',
+      description: '',
       color: 'from-orange-500 to-red-500',
       icon: 'Target',
       duration: 1800,
