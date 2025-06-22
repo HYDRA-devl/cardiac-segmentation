@@ -68,13 +68,7 @@ src/
 - **SSIM** - Structural Similarity Index
 - **Score Dice** - Coefficient de similarité pour segmentation
 
-## 👥 Contribution
 
-1. Fork le projet
-2. Créer une branche feature
-3. Commit les changements
-4. Push vers la branche
-5. Ouvrir une Pull Request
 
 ## 📄 License
 
