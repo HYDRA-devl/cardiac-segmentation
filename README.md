@@ -4,10 +4,10 @@ Interface web professionnelle pour le pipeline d'amélioration d'images échogra
 
 ## 🎯 Fonctionnalités
 
-- **Débruitage** - SupervisedDenoisingUNet pour éliminer le bruit
-- **Amélioration Contraste** - AggressiveContrastNet pour optimiser le contraste
-- **Super-Résolution** - FastRealESRGAN pour augmenter la résolution
-- **Segmentation** - LadderNet pour identifier les structures anatomiques
+- **Débruitage** - 
+- **Amélioration Contraste** - 
+- **Super-Résolution** - 
+- **Segmentation** - 
 
 ## 🚀 Pipeline de Traitement
 
