@@ -90,6 +90,17 @@ export interface ProcessingMetrics {
     };
   };
   
+  // Métriques de comparaison segmentation (nouvelle)
+  segmentation_comparison?: {
+    dice_agreement: number;          // Accord Dice entre segmentation directe et pipeline
+    direct_classes_count: number;    // Nombre de classes détectées directement
+    pipeline_classes_count: number;  // Nombre de classes détectées avec pipeline
+    direct_entropy: number;          // Entropie segmentation directe
+    pipeline_entropy: number;        // Entropie segmentation pipeline
+    entropy_improvement: number;     // Amélioration entropie (pipeline - direct)
+    classes_improvement: number;     // Amélioration nombre classes (pipeline - direct)
+  };
+  
   // Rétrocompatibilité (deprecated)
   psnr?: number;
   ssim?: number;
@@ -99,6 +110,12 @@ export interface ProcessingMetrics {
 export interface ProcessingResults {
   processedImage: string;
   segmentationMask: string;
+  // Nouvelles données pour comparaison segmentation
+  segmentationDirect?: string;
+  segmentationPipeline?: string;
+  classesDirect?: SegmentationClass[];
+  classesPipeline?: SegmentationClass[];
+  // Données existantes
   metrics: ProcessingMetrics;
   classes?: SegmentationClass[];
 }

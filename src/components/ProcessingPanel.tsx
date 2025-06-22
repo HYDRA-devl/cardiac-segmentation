@@ -21,7 +21,7 @@ export function ProcessingPanel({ processingState, hasResults }: ProcessingPanel
   const { isProcessing, currentStep } = processingState;
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+    <div className="grid grid-cols-5 gap-2 md:gap-3">
       {PIPELINE_CONFIG.steps.map((step, index) => {
         const IconComponent = STEP_ICONS[step.icon as keyof typeof STEP_ICONS];
         const isActive = isProcessing && currentStep === index;
@@ -31,7 +31,7 @@ export function ProcessingPanel({ processingState, hasResults }: ProcessingPanel
           <div key={index} className="text-center">
             <div 
               className={`
-                relative w-12 h-12 md:w-16 md:h-16 mx-auto rounded-full flex items-center justify-center mb-2 md:mb-3 transition-all duration-500
+                relative w-10 h-10 md:w-12 md:h-12 mx-auto rounded-full flex items-center justify-center mb-2 transition-all duration-500
                 ${isActive 
                   ? `bg-gradient-to-r ${step.color} scale-110 shadow-lg` 
                   : isCompleted
@@ -41,7 +41,7 @@ export function ProcessingPanel({ processingState, hasResults }: ProcessingPanel
               `}
             >
               <IconComponent 
-                className={`w-6 h-6 md:w-8 md:h-8 ${(isActive || isCompleted) ? 'text-white' : 'text-slate-300'}`} 
+                className={`w-5 h-5 md:w-6 md:h-6 ${(isActive || isCompleted) ? 'text-white' : 'text-slate-300'}`} 
               />
               {isActive && (
                 <>
@@ -50,20 +50,16 @@ export function ProcessingPanel({ processingState, hasResults }: ProcessingPanel
                 </>
               )}
               {isCompleted && !isActive && (
-                <div className="absolute -top-1 -right-1 w-5 h-5 md:w-6 md:h-6 bg-white rounded-full flex items-center justify-center">
-                  <div className="w-2 h-2 md:w-3 md:h-3 bg-green-500 rounded-full" />
+                <div className="absolute -top-1 -right-1 w-4 h-4 md:w-5 md:h-5 bg-white rounded-full flex items-center justify-center">
+                  <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-500 rounded-full" />
                 </div>
               )}
             </div>
             
-            <p className={`text-xs md:text-sm font-medium transition-colors mb-1 ${
+            <p className={`text-xs font-medium transition-colors mb-1 ${
               (isActive || isCompleted) ? 'text-white' : 'text-slate-300'
             }`}>
               {step.name}
-            </p>
-            
-            <p className="text-xs text-slate-400 leading-tight">
-              {step.description}
             </p>
             
             {isActive && (

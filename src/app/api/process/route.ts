@@ -69,9 +69,13 @@ export async function POST(request: NextRequest) {
 
     // Vérifier les résultats
     const processedImagePath = path.join(outputDir, 'processed_processed.png');
-    const segmentationPath = path.join(outputDir, 'processed_segmentation_colored.png');
+    const segmentationDirectPath = path.join(outputDir, 'processed_segmentation_direct.png');
+    const segmentationPipelinePath = path.join(outputDir, 'processed_segmentation_pipeline.png');
+    const segmentationPath = path.join(outputDir, 'processed_segmentation_colored.png'); // Rétrocompatibilité
     const metricsPath = path.join(outputDir, 'processed_metrics.json');
-    const classesPath = path.join(outputDir, 'processed_classes.json');
+    const classesDirectPath = path.join(outputDir, 'processed_classes_direct.json');
+    const classesPipelinePath = path.join(outputDir, 'processed_classes_pipeline.json');
+    const classesPath = path.join(outputDir, 'processed_classes.json'); // Rétrocompatibilité
 
     // Vérifier que les fichiers existent
     if (!fs.existsSync(processedImagePath)) {
@@ -80,13 +84,23 @@ export async function POST(request: NextRequest) {
 
     // Lire les résultats
     const processedImageBase64 = fs.readFileSync(processedImagePath, 'base64');
-    let segmentationBase64 = '';
     
-    if (fs.existsSync(segmentationPath)) {
-      segmentationBase64 = fs.readFileSync(segmentationPath, 'base64');
+    // Segmentation directe
+    let segmentationDirectBase64 = '';
+    if (fs.existsSync(segmentationDirectPath)) {
+      segmentationDirectBase64 = fs.readFileSync(segmentationDirectPath, 'base64');
+    }
+    
+    // Segmentation pipeline
+    let segmentationPipelineBase64 = '';
+    if (fs.existsSync(segmentationPipelinePath)) {
+      segmentationPipelineBase64 = fs.readFileSync(segmentationPipelinePath, 'base64');
+    } else if (fs.existsSync(segmentationPath)) {
+      // Fallback pour rétrocompatibilité
+      segmentationPipelineBase64 = fs.readFileSync(segmentationPath, 'base64');
     } else {
       // Utiliser l'image traitée comme fallback
-      segmentationBase64 = processedImageBase64;
+      segmentationPipelineBase64 = processedImageBase64;
     }
 
     // Lire les métriques
@@ -106,19 +120,42 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Lire les classes
-    let classes = [
-      { name: 'VG Endo', color: '#ef4444', confidence: 0.92 },
-      { name: 'OG', color: '#3b82f6', confidence: 0.88 },
-      { name: 'VG Epi', color: '#10b981', confidence: 0.95 },
-      { name: 'Arrière-plan', color: '#6b7280', confidence: 0.76 }
+    // Lire les classes directes
+    let classesDirect = [
+      { name: 'VG Endo (Direct)', color: '#ef4444', confidence: 0.75 },
+      { name: 'OG (Direct)', color: '#3b82f6', confidence: 0.70 },
+      { name: 'VG Epi (Direct)', color: '#10b981', confidence: 0.78 },
+      { name: 'Arrière-plan (Direct)', color: '#6b7280', confidence: 0.65 }
     ];
 
-    if (fs.existsSync(classesPath)) {
+    if (fs.existsSync(classesDirectPath)) {
       try {
-        classes = JSON.parse(fs.readFileSync(classesPath, 'utf8'));
+        classesDirect = JSON.parse(fs.readFileSync(classesDirectPath, 'utf8'));
       } catch (e) {
-        console.warn('⚠️ Erreur lecture classes:', e);
+        console.warn('⚠️ Erreur lecture classes directes:', e);
+      }
+    }
+    
+    // Lire les classes pipeline
+    let classesPipeline = [
+      { name: 'VG Endo (Pipeline)', color: '#ef4444', confidence: 0.92 },
+      { name: 'OG (Pipeline)', color: '#3b82f6', confidence: 0.88 },
+      { name: 'VG Epi (Pipeline)', color: '#10b981', confidence: 0.95 },
+      { name: 'Arrière-plan (Pipeline)', color: '#6b7280', confidence: 0.76 }
+    ];
+
+    if (fs.existsSync(classesPipelinePath)) {
+      try {
+        classesPipeline = JSON.parse(fs.readFileSync(classesPipelinePath, 'utf8'));
+      } catch (e) {
+        console.warn('⚠️ Erreur lecture classes pipeline:', e);
+      }
+    } else if (fs.existsSync(classesPath)) {
+      // Fallback pour rétrocompatibilité
+      try {
+        classesPipeline = JSON.parse(fs.readFileSync(classesPath, 'utf8'));
+      } catch (e) {
+        console.warn('⚠️ Erreur lecture classes fallback:', e);
       }
     }
 
@@ -134,13 +171,17 @@ export async function POST(request: NextRequest) {
       }
     }, 5000); // Attendre 5 secondes avant nettoyage
 
-    // Retourner les résultats
+    // Retourner les résultats avec comparaison segmentation
     const response = {
       success: true,
       processedImage: `data:image/png;base64,${processedImageBase64}`,
-      segmentationMask: `data:image/png;base64,${segmentationBase64}`,
+      segmentationMask: `data:image/png;base64,${segmentationPipelineBase64}`, // Rétrocompatibilité
+      segmentationDirect: segmentationDirectBase64 ? `data:image/png;base64,${segmentationDirectBase64}` : null,
+      segmentationPipeline: `data:image/png;base64,${segmentationPipelineBase64}`,
       metrics: metrics,
-      classes: classes
+      classes: classesPipeline, // Rétrocompatibilité
+      classesDirect: classesDirect,
+      classesPipeline: classesPipeline
     };
 
     console.log('🎉 Traitement réussi, envoi réponse');

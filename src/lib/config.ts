@@ -2,6 +2,7 @@ import { PipelineConfig } from '@/types/pipeline';
 
 export const PIPELINE_CONFIG: PipelineConfig = {
   steps: [
+    
     {
       name: 'Débruitage',
       description: '',
@@ -24,10 +25,10 @@ export const PIPELINE_CONFIG: PipelineConfig = {
       duration: 2000,
     },
     {
-      name: 'Segmentation',
+      name: 'Segmentation Pipeline',
       description: '',
-      color: 'from-orange-500 to-red-500',
-      icon: 'Target',
+      color: 'from-violet-500 to-purple-500',
+      icon: 'Zap',
       duration: 1800,
     }
   ],
@@ -38,27 +39,27 @@ export const PIPELINE_CONFIG: PipelineConfig = {
     noiseReduction: 75,
   },
   
-  // Couleurs ajustées pour correspondre à l'image de segmentation
+  // Classes de segmentation pour comparaison
   segmentationClasses: [
     {
       name: 'VG Endo',
-      color: '#8B0000', // Rouge foncé (comme dans l'image)
-      confidence: 0.67, // 67% d'après l'interface
+      color: '#ef4444', // Rouge
+      confidence: 0.85,
     },
     {
       name: 'OG', 
-      color: '#00FFFF', // Cyan (comme dans l'image)
-      confidence: 0.74, // 74% d'après l'interface
+      color: '#3b82f6', // Bleu
+      confidence: 0.80,
     },
     {
       name: 'VG Epi',
-      color: '#FFFF00', // Jaune (comme dans l'image)
-      confidence: 0.75, // 75% d'après l'interface
+      color: '#10b981', // Vert
+      confidence: 0.88,
     },
     {
       name: 'Arrière-plan',
-      color: '#000080', // Bleu foncé (fond dans l'image)
-      confidence: 0.92, // 92% d'après l'interface
+      color: '#6b7280', // Gris
+      confidence: 0.75,
     }
   ]
 };

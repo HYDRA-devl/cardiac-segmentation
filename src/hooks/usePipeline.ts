@@ -94,6 +94,11 @@ export function usePipeline() {
       const processedResults: ProcessingResults = {
         processedImage: apiResults.processedImage,
         segmentationMask: apiResults.segmentationMask,
+        // Nouvelles données pour comparaison segmentation
+        segmentationDirect: apiResults.segmentationDirect,
+        segmentationPipeline: apiResults.segmentationPipeline,
+        classesDirect: apiResults.classesDirect,
+        classesPipeline: apiResults.classesPipeline,
         metrics: {
           processingTime: apiResults.metrics.processingTime || 0,
           stepTimes: apiResults.metrics.stepTimes || {
@@ -131,8 +136,10 @@ export function usePipeline() {
             matthews_correlation: apiResults.metrics.segmentation?.matthews_correlation || 0,
           },
           classMetrics: apiResults.metrics.classMetrics || {},
+          // Métriques de comparaison segmentation
+          segmentation_comparison: apiResults.metrics.segmentation_comparison,
         },
-        classes: apiResults.classes || PIPELINE_CONFIG.segmentationClasses,
+        classes: apiResults.classes || apiResults.classesPipeline || PIPELINE_CONFIG.segmentationClasses,
       };
 
       setResults(processedResults);
