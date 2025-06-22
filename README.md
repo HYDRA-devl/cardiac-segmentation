@@ -9,12 +9,7 @@ Interface web professionnelle pour le pipeline d'amélioration d'images échogra
 - **Super-Résolution** - 
 - **Segmentation** - 
 
-## 🚀 Pipeline de Traitement
 
-1. **Étape 1**: Débruitage avec SupervisedDenoisingUNet
-2. **Étape 2**: Amélioration contraste avec AggressiveContrastNet  
-3. **Étape 3**: Super-résolution avec FastRealESRGAN
-4. **Étape 4**: Segmentation avec LadderNet
 
 ## 📋 Prérequis
 
