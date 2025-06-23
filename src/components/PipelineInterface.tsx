@@ -209,12 +209,7 @@ export function PipelineInterface() {
                     <div className="absolute top-4 left-4 bg-orange-600 text-white px-3 py-1 rounded-full text-sm">
                       Sans Pipeline
                     </div>
-                    <div className="absolute bottom-4 left-4 right-4 bg-black/70 text-white px-3 py-2 rounded-lg text-sm">
-                      <div className="flex justify-between items-center">
-                        <span>{results.classesDirect?.length || 4} classes</span>
-                        <span>Baseline</span>
-                      </div>
-                    </div>
+
                   </div>
                 ) : (
                   <div className="h-full flex items-center justify-center text-slate-400">
@@ -233,7 +228,7 @@ export function PipelineInterface() {
                 <div className="flex items-center justify-between">
                   <h4 className="text-lg font-semibold text-white flex items-center">
                     <Zap className="w-5 h-5 mr-2 text-purple-400" />
-                    Segmentation Pipeline
+                    Segmentation  Ameliorée
                   </h4>
                   {results?.segmentationPipeline && (
                     <button 
@@ -261,12 +256,7 @@ export function PipelineInterface() {
                     <div className="absolute top-4 left-4 bg-purple-600 text-white px-3 py-1 rounded-full text-sm">
                       Avec Pipeline
                     </div>
-                    <div className="absolute bottom-4 left-4 right-4 bg-black/70 text-white px-3 py-2 rounded-lg text-sm">
-                      <div className="flex justify-between items-center">
-                        <span>{results.classesPipeline?.length || 4} classes</span>
-                        <span>Optimisé IA</span>
-                      </div>
-                    </div>
+
                   </div>
                 ) : (
                   <div className="h-full flex items-center justify-center text-slate-400">
@@ -296,7 +286,7 @@ export function PipelineInterface() {
                     Impact du Pipeline sur la Segmentation
                   </h3>
                   
-                  <div className="grid md:grid-cols-3 gap-6">
+                  <div className="grid md:grid-cols-2 gap-6">
                     {/* Accord entre segmentations */}
                     <div className="text-center p-4 bg-white/10 rounded-xl">
                       <div className="text-3xl font-bold text-purple-400 mb-2">
@@ -319,15 +309,7 @@ export function PipelineInterface() {
                       <div className="text-sm text-purple-200">Amélioration Entropie</div>
                       <div className="text-xs text-slate-400 mt-1">Complexité de la segmentation</div>
                     </div>
-                    
-                    {/* Classes détectées */}
-                    <div className="text-center p-4 bg-white/10 rounded-xl">
-                      <div className="text-3xl font-bold text-cyan-400 mb-2">
-                        {results.metrics.segmentation_comparison.direct_classes_count} → {results.metrics.segmentation_comparison.pipeline_classes_count}
-                      </div>
-                      <div className="text-sm text-purple-200">Classes Détectées</div>
-                      <div className="text-xs text-slate-400 mt-1">Direct vs Pipeline</div>
-                    </div>
+
                   </div>
 
                   {/* Interprétation */}
@@ -404,7 +386,11 @@ export function PipelineInterface() {
                       Segmentation Directe
                     </h4>
                     <div className="space-y-3">
-                      {results.classesDirect.map((cls, index) => (
+                      {results.classesDirect.filter(cls => 
+                        !cls.name.toLowerCase().includes('arriere') && 
+                        !cls.name.toLowerCase().includes('arrière') && 
+                        cls.confidence > 0
+                      ).map((cls, index) => (
                         <div key={index} className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/5">
                           <div className="flex items-center space-x-3">
                             <div 
@@ -427,10 +413,14 @@ export function PipelineInterface() {
                   <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
                     <h4 className="text-lg font-semibold text-white mb-4 flex items-center">
                       <Zap className="w-5 h-5 mr-2 text-purple-400" />
-                      Segmentation Pipeline
+                      Segmentation Ameliorée
                     </h4>
                     <div className="space-y-3">
-                      {results.classesPipeline.map((cls, index) => (
+                      {results.classesPipeline.filter(cls => 
+                        !cls.name.toLowerCase().includes('arriere') && 
+                        !cls.name.toLowerCase().includes('arrière') && 
+                        cls.confidence > 0
+                      ).map((cls, index) => (
                         <div key={index} className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/5">
                           <div className="flex items-center space-x-3">
                             <div 

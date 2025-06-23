@@ -46,8 +46,8 @@ export async function POST(request: NextRequest) {
     fs.writeFileSync(inputPath, imageBuffer);
     console.log('📥 Image sauvée:', inputPath);
 
-    // Construire la commande Python
-    const pythonScript = process.env.PYTHON_SCRIPT_PATH || 'C:\\Users\\ASUS\\Desktop\\Final\\pipeline.py';
+    // Construire la commande Python - Utiliser le script dans le projet
+    const pythonScript = process.env.PYTHON_SCRIPT_PATH || path.join(process.cwd(), 'pipeline.py');
     
     // Convertir les paramètres (0-100) vers (0.0-1.0)
     const contrast = (parameters.contrast || 50) / 100.0;
@@ -120,17 +120,31 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Forcer l'inversion des couleurs OG/VG Epi dans l'interface
+    const fixColors = (classes: any[]) => {
+      return classes.map(cls => {
+        if (cls.name.includes('OG')) {
+          return { ...cls, color: '#10b981' }; // Forcer OG en vert
+        }
+        if (cls.name.includes('VG Epi')) {
+          return { ...cls, color: '#3b82f6' }; // Forcer VG Epi en bleu
+        }
+        return cls;
+      });
+    };
+
     // Lire les classes directes
     let classesDirect = [
       { name: 'VG Endo (Direct)', color: '#ef4444', confidence: 0.75 },
-      { name: 'OG (Direct)', color: '#3b82f6', confidence: 0.70 },
-      { name: 'VG Epi (Direct)', color: '#10b981', confidence: 0.78 },
+      { name: 'OG (Direct)', color: '#10b981', confidence: 0.70 },
+      { name: 'VG Epi (Direct)', color: '#3b82f6', confidence: 0.78 },
       { name: 'Arrière-plan (Direct)', color: '#6b7280', confidence: 0.65 }
     ];
 
     if (fs.existsSync(classesDirectPath)) {
       try {
-        classesDirect = JSON.parse(fs.readFileSync(classesDirectPath, 'utf8'));
+        const loadedClasses = JSON.parse(fs.readFileSync(classesDirectPath, 'utf8'));
+        classesDirect = fixColors(loadedClasses);
       } catch (e) {
         console.warn('⚠️ Erreur lecture classes directes:', e);
       }
@@ -139,21 +153,23 @@ export async function POST(request: NextRequest) {
     // Lire les classes pipeline
     let classesPipeline = [
       { name: 'VG Endo (Pipeline)', color: '#ef4444', confidence: 0.92 },
-      { name: 'OG (Pipeline)', color: '#3b82f6', confidence: 0.88 },
-      { name: 'VG Epi (Pipeline)', color: '#10b981', confidence: 0.95 },
+      { name: 'OG (Pipeline)', color: '#10b981', confidence: 0.88 },
+      { name: 'VG Epi (Pipeline)', color: '#3b82f6', confidence: 0.95 },
       { name: 'Arrière-plan (Pipeline)', color: '#6b7280', confidence: 0.76 }
     ];
 
     if (fs.existsSync(classesPipelinePath)) {
       try {
-        classesPipeline = JSON.parse(fs.readFileSync(classesPipelinePath, 'utf8'));
+        const loadedClasses = JSON.parse(fs.readFileSync(classesPipelinePath, 'utf8'));
+        classesPipeline = fixColors(loadedClasses);
       } catch (e) {
         console.warn('⚠️ Erreur lecture classes pipeline:', e);
       }
     } else if (fs.existsSync(classesPath)) {
       // Fallback pour rétrocompatibilité
       try {
-        classesPipeline = JSON.parse(fs.readFileSync(classesPath, 'utf8'));
+        const loadedClasses = JSON.parse(fs.readFileSync(classesPath, 'utf8'));
+        classesPipeline = fixColors(loadedClasses);
       } catch (e) {
         console.warn('⚠️ Erreur lecture classes fallback:', e);
       }

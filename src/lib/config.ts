@@ -48,12 +48,12 @@ export const PIPELINE_CONFIG: PipelineConfig = {
     },
     {
       name: 'OG', 
-      color: '#3b82f6', // Bleu
+      color: '#10b981', // Vert
       confidence: 0.80,
     },
     {
       name: 'VG Epi',
-      color: '#10b981', // Vert
+      color: '#3b82f6', // Bleu
       confidence: 0.88,
     },
     {
